@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Project Setup – Replicon & Invoicing</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue: #1a56c4;
+    --blue-light: #e8f0fc;
+    --blue-mid: #3b6fd4;
+    --amber: #b45309;
+    --amber-light: #fef3c7;
+    --green: #0d6f4f;
+    --green-light: #d1fae5;
+    --rose: #be185d;
+    --rose-light: #fce7f3;
+    --gray-50: #f8f9fa;
+    --gray-100: #f1f3f5;
+    --gray-200: #e9ecef;
+    --gray-300: #dee2e6;
+    --gray-400: #ced4da;
+    --gray-500: #adb5bd;
+    --gray-600: #6c757d;
+    --gray-700: #495057;
+    --gray-800: #343a40;
+    --gray-900: #212529;
+    --red: #dc2626;
+    --red-light: #fef2f2;
+    --radius: 10px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow: 0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+    --shadow-lg: 0 10px 40px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f0f2f7;
+    color: var(--gray-900);
+    min-height: 100vh;
+    padding: 2rem 1rem 5rem;
+  }
+
+  .page-header {
+    max-width: 780px;
+    margin: 0 auto 2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .logo-mark {
+    width: 44px;
+    height: 44px;
+    background: var(--blue);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .logo-mark svg { display: block; }
+
+  .page-header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--gray-900);
+    line-height: 1.2;
+    margin-bottom: 5px;
+  }
+
+  .page-header p {
+    font-size: 14px;
+    color: var(--gray-600);
+    line-height: 1.6;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    max-width: 780px;
+    margin: 0 auto 1.5rem;
+    overflow: hidden;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 1.1rem 1.5rem;
+    border-bottom: 1px solid var(--gray-100);
+  }
+
+  .section-badge {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 99px;
+  }
+
+  .badge-client { background: var(--blue-light); color: var(--blue); }
+  .badge-project { background: var(--amber-light); color: var(--amber); }
+  .badge-team { background: var(--rose-light); color: var(--rose); }
+  .badge-invoice { background: var(--green-light); color: var(--green); }
+  .badge-docs { background: var(--gray-100); color: var(--gray-700); }
+
+  .card-header-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gray-800);
+  }
+
+  .card-body { padding: 1.5rem; }
+
+  .field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  .field-full { grid-column: 1 / -1; }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+
+  .field label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-700);
+  }
+
+  .req { color: var(--red); margin-left: 2px; }
+
+  .field input,
+  .field select,
+  .field textarea {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--gray-900);
+    background: var(--gray-50);
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    width: 100%;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+    -webkit-appearance: none;
+  }
+
+  .field input::placeholder,
+  .field textarea::placeholder { color: var(--gray-400); }
+
+  .field input:hover,
+  .field select:hover,
+  .field textarea:hover { border-color: var(--gray-400); background: #fff; }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--blue-mid);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(59,111,212,0.12);
+  }
+
+  .field textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+
+  .field select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%236c757d' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+
+  .hint { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+
+  .field-error {
+    font-size: 12px;
+    color: var(--red);
+    display: none;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .field.invalid input,
+  .field.invalid select,
+  .field.invalid textarea {
+    border-color: var(--red);
+    background: var(--red-light);
+  }
+
+  .field.invalid .field-error { display: flex; }
+
+  /* Team table */
+  .team-table-wrap { overflow-x: auto; border-radius: var(--radius); border: 1.5px solid var(--gray-200); }
+
+  .team-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  .team-table thead tr { background: var(--gray-50); }
+
+  .team-table th {
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gray-600);
+    border-bottom: 1.5px solid var(--gray-200);
+  }
+
+  .team-table td {
+    border-bottom: 1px solid var(--gray-100);
+    padding: 0;
+  }
+
+  .team-table tbody tr:last-child td { border-bottom: none; }
+
+  .team-table td input {
+    border: none;
+    background: transparent;
+    padding: 11px 12px;
+    font-size: 14px;
+    width: 100%;
+    color: var(--gray-900);
+    font-family: 'DM Sans', sans-serif;
+    border-radius: 0;
+  }
+
+  .team-table td input:focus {
+    outline: none;
+    background: var(--blue-light);
+    box-shadow: none;
+  }
+
+  .team-table td.action-cell {
+    width: 44px;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .remove-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-400);
+    transition: background 0.12s, color 0.12s;
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .remove-btn:hover { background: var(--red-light); color: var(--red); }
+
+  .add-row-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--blue);
+    background: var(--blue-light);
+    border: none;
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.12s;
+  }
+
+  .add-row-btn:hover { background: #d0e2f9; }
+
+  /* Upload */
+  .upload-zone {
+    border: 2px dashed var(--gray-300);
+    border-radius: var(--radius);
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    transition: border-color 0.15s, background 0.15s;
+    background: var(--gray-50);
+  }
+
+  .upload-zone:hover { border-color: var(--blue-mid); background: var(--blue-light); }
+  .upload-zone.has-file { border-color: var(--green); background: var(--green-light); border-style: solid; }
+
+  .upload-zone input[type=file] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  .upload-icon-wrap {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: #fff;
+    border: 1.5px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .upload-zone.has-file .upload-icon-wrap { border-color: var(--green); }
+
+  .upload-main { font-size: 15px; font-weight: 500; color: var(--gray-800); margin-bottom: 4px; }
+  .upload-sub { font-size: 13px; color: var(--gray-500); }
+  .upload-filename { font-size: 13px; font-weight: 500; color: var(--green); margin-top: 8px; display: none; font-family: 'DM Mono', monospace; }
+
+  /* Progress bar */
+  .progress-bar-wrap {
+    max-width: 780px;
+    margin: 0 auto 1.5rem;
+    background: #fff;
+    border-radius: 99px;
+    padding: 6px 16px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .progress-label { font-size: 12px; color: var(--gray-600); white-space: nowrap; }
+  .progress-track { flex: 1; height: 6px; background: var(--gray-200); border-radius: 99px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--blue); border-radius: 99px; width: 0%; transition: width 0.4s ease; }
+  .progress-pct { font-size: 12px; font-weight: 600; color: var(--blue); min-width: 32px; text-align: right; }
+
+  /* Submit */
+  .submit-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .submit-note { font-size: 13px; color: var(--gray-500); }
+
+  .submit-btn {
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    padding: 12px 32px;
+    border-radius: var(--radius);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.15s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(26,86,196,0.3);
+  }
+
+  .submit-btn:hover { background: #1448a8; }
+  .submit-btn:active { transform: scale(0.98); }
+  .submit-btn:disabled { background: var(--gray-400); box-shadow: none; cursor: not-allowed; }
+
+  .success-banner {
+    display: none;
+    max-width: 780px;
+    margin: 1.5rem auto 0;
+    background: var(--green-light);
+    border: 1.5px solid #34d399;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    display: none;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .success-banner.show { display: flex; }
+
+  .success-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .success-title { font-size: 15px; font-weight: 600; color: var(--green); margin-bottom: 3px; }
+  .success-text { font-size: 13px; color: #065f46; line-height: 1.5; }
+
+  @media (max-width: 600px) {
+    .field-grid { grid-template-columns: 1fr; }
+    .page-header h1 { font-size: 20px; }
+    .submit-card { flex-direction: column; }
+    .submit-btn { width: 100%; justify-content: center; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card { animation: fadeUp 0.35s ease both; }
+  .card:nth-child(1) { animation-delay: 0.05s; }
+  .card:nth-child(2) { animation-delay: 0.10s; }
+  .card:nth-child(3) { animation-delay: 0.15s; }
+  .card:nth-child(4) { animation-delay: 0.20s; }
+  .card:nth-child(5) { animation-delay: 0.25s; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="logo-mark">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <rect x="3" y="3" width="7" height="7" rx="1.5" fill="#fff" fill-opacity="0.9"/>
+      <rect x="12" y="3" width="7" height="7" rx="1.5" fill="#fff" fill-opacity="0.5"/>
+      <rect x="3" y="12" width="7" height="7" rx="1.5" fill="#fff" fill-opacity="0.5"/>
+      <rect x="12" y="12" width="7" height="7" rx="1.5" fill="#fff" fill-opacity="0.7"/>
+    </svg>
+  </div>
+  <div>
+    <h1>New project setup</h1>
+    <p>Complete all fields to allow the Finance team to open the project in Replicon and configure invoicing.<br>Fields marked <span style="color:var(--red)">*</span> are mandatory.</p>
+  </div>
+</div>
+
+<div class="progress-bar-wrap">
+  <span class="progress-label">Form completion</span>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <span class="progress-pct" id="progressPct">0%</span>
+</div>
+
+<form id="projectForm" novalidate>
+
+  <!-- CLIENT -->
+  <div class="card">
+    <div class="card-header">
+      <span class="section-badge badge-client">Client</span>
+      <span class="card-header-title">Client information</span>
+    </div>
+    <div class="card-body">
+      <div class="field-grid">
+        <div class="field" data-required>
+          <label>Client name <span class="req">*</span></label>
+          <input type="text" name="client_name" placeholder="Acme Corporation">
+          <span class="field-error">Please enter the client name</span>
+        </div>
+        <div class="field" data-required>
+          <label>Country <span class="req">*</span></label>
+          <input type="text" name="country" placeholder="United States">
+          <span class="field-error">Please enter the country</span>
+        </div>
+        <div class="field field-full" data-required>
+          <label>Address <span class="req">*</span></label>
+          <textarea name="address" rows="2" placeholder="Street address, city, state, ZIP / postal code"></textarea>
+          <span class="field-error">Please enter the address</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECT -->
+  <div class="card">
+    <div class="card-header">
+      <span class="section-badge badge-project">Project</span>
+      <span class="card-header-title">Project information</span>
+    </div>
+    <div class="card-body">
+      <div class="field-grid">
+        <div class="field" data-required>
+          <label>Project name <span class="req">*</span></label>
+          <input type="text" name="project_name" placeholder="e.g. Q4 Digital Transformation">
+          <span class="field-error">Please enter the project name</span>
+        </div>
+        <div class="field" data-required>
+          <label>Purchase order / change request number <span class="req">*</span></label>
+          <input type="text" name="po_number" placeholder="PO-12345">
+          <span class="field-error">Please enter the PO or CR number</span>
+        </div>
+        <div class="field" data-required>
+          <label>Project type <span class="req">*</span></label>
+          <select name="project_type">
+            <option value="">Select type…</option>
+            <option value="tm">T&M – Time & Materials</option>
+            <option value="fixed">Fixed Fee</option>
+            <option value="milestone">Milestone-based</option>
+          </select>
+          <span class="field-error">Please select a project type</span>
+        </div>
+        <div class="field" data-required>
+          <label>Project start date <span class="req">*</span></label>
+          <input type="date" name="start_date">
+          <span class="field-error">Please select a start date</span>
+        </div>
+        <div class="field" data-required>
+          <label>Total contract value <span class="req">*</span></label>
+          <input type="number" name="contract_value" placeholder="0.00" min="0" step="0.01">
+          <span class="hint">In USD unless currency changed below</span>
+          <span class="field-error">Please enter the contract value</span>
+        </div>
+        <div class="field" data-required>
+          <label>Expected writeoffs <span class="req">*</span></label>
+          <input type="number" name="writeoffs" placeholder="0.00" min="0" step="0.01">
+          <span class="field-error">Please enter expected writeoffs (enter 0 if none)</span>
+        </div>
+        <div class="field" data-required>
+          <label>Total hours estimate <span class="req">*</span></label>
+          <input type="number" name="total_hours" placeholder="e.g. 500" min="0">
+          <span class="field-error">Please enter total hours estimate</span>
+        </div>
+        <div class="field" data-required>
+          <label>Currency <span class="req">*</span></label>
+          <select name="currency">
+            <option value="USD">USD – US Dollar ($)</option>
+            <option value="EUR">EUR – Euro (€)</option>
+            <option value="GBP">GBP – British Pound (£)</option>
+            <option value="CAD">CAD – Canadian Dollar (CA$)</option>
+            <option value="AUD">AUD – Australian Dollar (A$)</option>
+            <option value="TND">TND – Tunisian Dinar (د.ت)</option>
+            <option value="OTHER">Other</option>
+          </select>
+          <span class="field-error">Please select a currency</span>
+        </div>
+        <div class="field field-full">
+          <label>Project notes</label>
+          <textarea name="project_notes" rows="3" placeholder="Any extra details regarding project specifics, special requirements, or scope clarifications…"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEAM -->
+  <div class="card">
+    <div class="card-header">
+      <span class="section-badge badge-team">Team</span>
+      <span class="card-header-title">Team assigned – names, roles & rates</span>
+    </div>
+    <div class="card-body">
+      <p class="hint" style="margin-bottom:14px;">List each team member individually. Click "Add member" to add more rows.</p>
+      <div class="team-table-wrap">
+        <table class="team-table" id="teamTable">
+          <thead>
+            <tr>
+              <th style="width:34%">Full name</th>
+              <th style="width:36%">Role / position</th>
+              <th style="width:22%">Hourly rate ($)</th>
+              <th style="width:8%"></th>
+            </tr>
+          </thead>
+          <tbody id="teamBody">
+            <tr>
+              <td><input type="text" placeholder="e.g. Jane Smith"></td>
+              <td><input type="text" placeholder="e.g. Senior Consultant"></td>
+              <td><input type="number" placeholder="150.00" min="0" step="0.01"></td>
+              <td class="action-cell"><button type="button" class="remove-btn" onclick="removeRow(this)" title="Remove row">×</button></td>
+            </tr>
+            <tr>
+              <td><input type="text" placeholder="e.g. John Doe"></td>
+              <td><input type="text" placeholder="e.g. Project Manager"></td>
+              <td><input type="number" placeholder="200.00" min="0" step="0.01"></td>
+              <td class="action-cell"><button type="button" class="remove-btn" onclick="removeRow(this)" title="Remove row">×</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <button type="button" class="add-row-btn" onclick="addRow()">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="6" stroke="#1a56c4" stroke-width="1.2"/><line x1="6.5" y1="3.5" x2="6.5" y2="9.5" stroke="#1a56c4" stroke-width="1.4" stroke-linecap="round"/><line x1="3.5" y1="6.5" x2="9.5" y2="6.5" stroke="#1a56c4" stroke-width="1.4" stroke-linecap="round"/></svg>
+        Add member
+      </button>
+    </div>
+  </div>
+
+  <!-- INVOICE -->
+  <div class="card">
+    <div class="card-header">
+      <span class="section-badge badge-invoice">Invoice</span>
+      <span class="card-header-title">Invoice information</span>
+    </div>
+    <div class="card-body">
+      <div class="field-grid">
+        <div class="field" data-required>
+          <label>Invoice cadence <span class="req">*</span></label>
+          <select name="invoice_cadence">
+            <option value="">Select cadence…</option>
+            <option value="445">4/4/5</option>
+            <option value="calendar">Calendar month</option>
+            <option value="specific">On specific date</option>
+            <option value="other">Other</option>
+          </select>
+          <span class="field-error">Please select an invoice cadence</span>
+        </div>
+        <div class="field" data-required>
+          <label>Payment terms <span class="req">*</span></label>
+          <select name="payment_terms">
+            <option value="">Select terms…</option>
+            <option value="net30">Net 30</option>
+            <option value="net45">Net 45</option>
+            <option value="net60">Net 60</option>
+            <option value="other">Other</option>
+          </select>
+          <span class="field-error">Please select payment terms</span>
+        </div>
+        <div class="field" data-required>
+          <label>Display grouping on invoice <span class="req">*</span></label>
+          <select name="display_grouping">
+            <option value="">Select grouping…</option>
+            <option value="name">By name</option>
+            <option value="task">By task</option>
+            <option value="role">By role</option>
+          </select>
+          <span class="field-error">Please select a display grouping</span>
+        </div>
+        <div class="field" data-required>
+          <label>Invoice phone number <span class="req">*</span></label>
+          <input type="tel" name="invoice_phone" placeholder="+1 (555) 000-0000">
+          <span class="field-error">Please enter an invoice phone number</span>
+        </div>
+        <div class="field" data-required>
+          <label>Invoice recipient name <span class="req">*</span></label>
+          <input type="text" name="recipient_name" placeholder="John Doe">
+          <span class="field-error">Please enter the recipient name</span>
+        </div>
+        <div class="field" data-required data-email>
+          <label>Invoice recipient email <span class="req">*</span></label>
+          <input type="email" name="recipient_email" placeholder="john@client.com">
+          <span class="field-error">Please enter a valid email address</span>
+        </div>
+        <div class="field field-full" data-required data-email>
+          <label>Finance department email <span class="req">*</span></label>
+          <input type="email" name="finance_email" placeholder="finance@client.com">
+          <span class="field-error">Please enter a valid email address</span>
+        </div>
+        <div class="field field-full">
+          <label>Client-specific invoice requests</label>
+          <textarea name="invoice_requests" rows="2" placeholder="e.g. Include PO number on each invoice line, specific name format on description, etc."></textarea>
+          <span class="hint">Leave blank if none</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOCUMENTS -->
+  <div class="card">
+    <div class="card-header">
+      <span class="section-badge badge-docs">Documents</span>
+      <span class="card-header-title">Statement of work (SOW)</span>
+    </div>
+    <div class="card-body">
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" id="sowFile" name="sow_file" accept=".pdf,.doc,.docx" onchange="handleFile(this)">
+        <div class="upload-icon-wrap">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 13V4M10 4L6.5 7.5M10 4L13.5 7.5" stroke="#1a56c4" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M3 16h14" stroke="#1a56c4" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="upload-main">Click to upload SOW</div>
+        <div class="upload-sub">PDF, DOC, or DOCX accepted</div>
+        <div class="upload-filename" id="fileName"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="submit-card">
+    <div>
+      <div style="font-size:14px;font-weight:600;color:var(--gray-800);margin-bottom:3px;">Ready to submit?</div>
+      <div class="submit-note">Your submission will be reviewed by the Finance team. All mandatory fields must be completed.</div>
+    </div>
+    <button type="submit" class="submit-btn" id="submitBtn">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 4l5 4-5 4" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Submit project request
+    </button>
+  </div>
+
+  <div class="success-banner" id="successBanner">
+    <div class="success-icon">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div>
+      <div class="success-title">Project request submitted successfully!</div>
+      <div class="success-text">Thank you. The Finance team will review your submission and reach out if any information is missing. Please keep a copy of this confirmation for your records.</div>
+    </div>
+  </div>
+
+</form>
+
+<script>
+  function addRow() {
+    const tbody = document.getElementById('teamBody');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="text" placeholder="Full name"></td>
+      <td><input type="text" placeholder="Role / position"></td>
+      <td><input type="number" placeholder="Rate" min="0" step="0.01"></td>
+      <td class="action-cell"><button type="button" class="remove-btn" onclick="removeRow(this)" title="Remove row">×</button></td>
+    `;
+    tbody.appendChild(tr);
+    tr.querySelector('input').focus();
+    updateProgress();
+  }
+
+  function removeRow(btn) {
+    const rows = document.querySelectorAll('#teamBody tr');
+    if (rows.length > 1) {
+      btn.closest('tr').remove();
+      updateProgress();
+    }
+  }
+
+  function handleFile(input) {
+    const zone = document.getElementById('uploadZone');
+    const fn = document.getElementById('fileName');
+    if (input.files && input.files[0]) {
+      fn.textContent = '📄 ' + input.files[0].name;
+      fn.style.display = 'block';
+      zone.classList.add('has-file');
+    }
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const requiredFields = document.querySelectorAll('[data-required] input, [data-required] select, [data-required] textarea');
+    let filled = 0;
+    requiredFields.forEach(el => { if (el.value.trim()) filled++; });
+    const pct = Math.round((filled / requiredFields.length) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent = pct + '%';
+  }
+
+  document.getElementById('projectForm').addEventListener('input', updateProgress);
+
+  function isValidEmail(val) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+  }
+
+  document.getElementById('projectForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    let valid = true;
+    const requiredFields = this.querySelectorAll('[data-required]');
+
+    requiredFields.forEach(field => {
+      const el = field.querySelector('input, select, textarea');
+      if (!el) return;
+      const val = el.value.trim();
+      let fieldValid = !!val;
+      if (field.hasAttribute('data-email') && val) {
+        fieldValid = isValidEmail(val);
+      }
+      if (!fieldValid) {
+        field.classList.add('invalid');
+        valid = false;
+      } else {
+        field.classList.remove('invalid');
+      }
+    });
+
+    if (!valid) {
+      const firstInvalid = this.querySelector('.field.invalid');
+      if (firstInvalid) firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+const webAppUrl = 'https://script.google.com/macros/s/AKfycbwC2JTghM7DRXGVL72uB1CerQNRvjwyHb9I3HeNl66eeRI80wHopuLhVDslZjMsRXU-eA/exec';
+
+const teamRows = [];
+document.querySelectorAll('#teamBody tr').forEach(row => {
+  const inputs = row.querySelectorAll('input');
+  if (inputs[0].value.trim()) {
+    teamRows.push(`${inputs[0].value} | ${inputs[1].value} | $${inputs[2].value}/hr`);
+  }
+});
+
+const formData = {
+  client_name:       document.querySelector('[name=client_name]').value,
+  country:           document.querySelector('[name=country]').value,
+  address:           document.querySelector('[name=address]').value,
+  project_name:      document.querySelector('[name=project_name]').value,
+  po_number:         document.querySelector('[name=po_number]').value,
+  project_type:      document.querySelector('[name=project_type]').value,
+  start_date:        document.querySelector('[name=start_date]').value,
+  contract_value:    document.querySelector('[name=contract_value]').value,
+  writeoffs:         document.querySelector('[name=writeoffs]').value,
+  total_hours:       document.querySelector('[name=total_hours]').value,
+  currency:          document.querySelector('[name=currency]').value,
+  project_notes:     document.querySelector('[name=project_notes]').value,
+  team_members:      teamRows.join('\n'),
+  invoice_cadence:   document.querySelector('[name=invoice_cadence]').value,
+  payment_terms:     document.querySelector('[name=payment_terms]').value,
+  display_grouping:  document.querySelector('[name=display_grouping]').value,
+  invoice_phone:     document.querySelector('[name=invoice_phone]').value,
+  recipient_name:    document.querySelector('[name=recipient_name]').value,
+  recipient_email:   document.querySelector('[name=recipient_email]').value,
+  finance_email:     document.querySelector('[name=finance_email]').value,
+  invoice_requests:  document.querySelector('[name=invoice_requests]').value,
+};
+
+fetch(webAppUrl, {
+  method: 'POST',
+  body: JSON.stringify(formData)
+});
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Submitted`;
+
+    const banner = document.getElementById('successBanner');
+    banner.classList.add('show');
+    banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('progressFill').style.background = '#0d6f4f';
+    document.getElementById('progressPct').textContent = '100%';
+    document.getElementById('progressPct').style.color = '#0d6f4f';
+  });
+
+  document.querySelectorAll('[data-required] input, [data-required] select, [data-required] textarea').forEach(el => {
+    el.addEventListener('input', function() {
+      const field = this.closest('[data-required]');
+      if (this.value.trim()) field.classList.remove('invalid');
+    });
+  });
+
+  updateProgress();
+</script>
+</body>
+</html>
